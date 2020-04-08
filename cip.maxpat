@@ -10,7 +10,7 @@
 		}
 ,
 		"classnamespace" : "box",
-		"rect" : [ 139.0, 513.0, 448.0, 353.0 ],
+		"rect" : [ 86.0, 164.0, 640.0, 633.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -40,12 +40,11 @@
 		"boxes" : [ 			{
 				"box" : 				{
 					"id" : "obj-1",
-					"maxclass" : "newobj",
-					"numinlets" : 2,
+					"maxclass" : "jit.pwindow",
+					"numinlets" : 1,
 					"numoutlets" : 2,
-					"outlettype" : [ "list", "" ],
-					"patching_rect" : [ 116.0, 238.0, 44.0, 22.0 ],
-					"text" : "jit.quat"
+					"outlettype" : [ "jit_matrix", "" ],
+					"patching_rect" : [ 16.0, 155.0, 503.0, 350.0 ]
 				}
 
 			}
@@ -56,8 +55,8 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 364.0, 90.0, 59.0, 22.0 ],
-					"text" : "0, 1 3000"
+					"patching_rect" : [ 289.0, 26.0, 59.0, 22.0 ],
+					"text" : "0, 1 5000"
 				}
 
 			}
@@ -68,7 +67,7 @@
 					"numinlets" : 3,
 					"numoutlets" : 2,
 					"outlettype" : [ "", "bang" ],
-					"patching_rect" : [ 334.0, 190.0, 40.0, 22.0 ],
+					"patching_rect" : [ 289.0, 53.0, 40.0, 22.0 ],
 					"text" : "line"
 				}
 
@@ -80,20 +79,8 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 276.0, 91.0, 47.0, 22.0 ],
+					"patching_rect" : [ 201.0, 27.0, 47.0, 22.0 ],
 					"text" : "eval $1"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"id" : "obj-5",
-					"maxclass" : "newobj",
-					"numinlets" : 1,
-					"numoutlets" : 2,
-					"outlettype" : [ "", "" ],
-					"patching_rect" : [ 207.0, 269.0, 73.0, 22.0 ],
-					"text" : "jit.anim.path"
 				}
 
 			}
@@ -106,18 +93,6 @@
 					"outlettype" : [ "" ],
 					"patching_rect" : [ 90.0, 58.0, 35.0, 22.0 ],
 					"text" : "open"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"id" : "obj-53",
-					"maxclass" : "newobj",
-					"numinlets" : 2,
-					"numoutlets" : 2,
-					"outlettype" : [ "", "" ],
-					"patching_rect" : [ 16.0, 159.0, 69.0, 22.0 ],
-					"text" : "route name"
 				}
 
 			}
@@ -240,7 +215,7 @@
 			}
 , 			{
 				"patchline" : 				{
-					"destination" : [ "obj-53", 0 ],
+					"destination" : [ "obj-1", 0 ],
 					"source" : [ "obj-4", 0 ]
 				}
 
@@ -262,7 +237,7 @@
  ],
 		"dependency_cache" : [ 			{
 				"name" : "vidwrm3.js",
-				"bootpath" : "/Volumes/Archive/andrew/projects/vidwrm",
+				"bootpath" : "~/Documents/code/cip-3d",
 				"patcherrelativepath" : ".",
 				"type" : "TEXT",
 				"implicit" : 1
