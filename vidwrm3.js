@@ -5,20 +5,20 @@ this.outlets = 1;
 
 var pi = 3.14159265359;
 
-var dim = [320, 240];
-
 /*
 var window = new JitterObject("jit.window","wrm");
 window.size = dim;
 */
 
-//*
+/*
 var mtrx = new JitterMatrix(4, "char", dim[0], dim[1]);
 mtrx.name = "wrm";
-//*/
+*/
 
+/*
 var render = new JitterObject("jit.gl.render","wrm");
 render.camera = [0,0,5];
+*/
 
 var teapotTex = new JitterObject("jit.gl.texture", "wrm");
 teapotTex.file = "teapot.bmp";
@@ -129,7 +129,7 @@ function Frame() {
 	this.updateQuats();
 }
 
-var framecount = 1;//100;
+var framecount = 240;
 var frames = [];
 
 for(var i = 0; i < framecount; i++) {
@@ -147,6 +147,7 @@ function eval(n) {
 	}
 }
 
+/*
 function bang() {
 	//var render = mtrx;
 	
@@ -159,4 +160,5 @@ function bang() {
 	
 	outlet(0, "jit_matrix", mtrx.name); 
 }
+*/
 
