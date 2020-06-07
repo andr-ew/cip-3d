@@ -12,34 +12,31 @@
 		</style>
 	</head>
 	<body>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-        <script src="./lib/tween.umd.js"></script>
-        <script src="./lib/three/build/three.min.js"></script>
-        <script src="./lib/threecap/threecap.js"></script>
-        <script type="module" src="./lib/main.js"></script>
+        <script src="./threepeat/three/build/three.min.js"></script>
+        <script src="./threepeat/threecap/threecap.js"></script>
+        <script type="module" src="./threepeat/threepeat.js"></script>
         <script type="module">
-            import * as THREE from './lib/three/build/three.module.js';
-            import { OrbitControls } from './lib/three/examples/jsm/controls/OrbitControls.js';
-            import { Objmod } from './models.js';
-            import { main } from './lib/main.js';
+            import * as THREE from './threepeat/three/build/three.module.js';
+            import { OrbitControls } from './threepeat/three/examples/jsm/controls/OrbitControls.js';
+            import { makemodel, tea } from './models.js';
+            import { threepeat } from './threepeat/threepeat.js';
             
             var w = window;
             
             w.lt = 10;
             
-            main((scene, camera, renderer) => {
+            threepeat((scene, camera, renderer) => {
 
                 var animate;
 
                 var orbit = new OrbitControls( camera, renderer.domElement );
 
-                var tea = new Objmod('teapot');
-                scene.add(tea.grp);
+                scene.add(tea);
 
                 camera.position.z = 300;
                 
                 return () => {
-                    tea.grp.rotation.y += (2 * Math.PI) / w.lt / w.fps;
+                    tea.rotation.y += (2 * Math.PI) / w.lt / w.fps;
                 }
             });
         </script>

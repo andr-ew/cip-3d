@@ -26,9 +26,7 @@ w.record = function(reset) {
             fps: 25,
             time: window.lt,
             format: 'gif',
-//            scriptbase: "./threecap/",
-            //canvas: canvasDomElement,   // optional, slowest
-            composer: composer // optional, fastest
+            composer: composer
         }).then(function(video) {
             video.saveFile('myVideo.gif');
         });
@@ -42,7 +40,7 @@ w.init = function() {
     main(init, update);
 }
 
-export function main(init, update, done) {
+export function threepeat(init, update, done) {
     w.init = init;
     w.update = update;
     
@@ -69,7 +67,7 @@ export function main(init, update, done) {
     effect.renderToScreen = false;
     composer.addPass( effect );
 
-    capture = new THREEcap({composer: composer, scriptbase: './lib/threecap/'});
+    capture = new THREEcap({composer: composer, scriptbase: './threepeat/threecap/'});
 //  var captureui = new THREEcapUI(capture);
     
     var animate = function() {
@@ -82,13 +80,13 @@ export function main(init, update, done) {
         composer.render();
     };
     
-    $(window).on("resize", () => {
+    window.addEventListener("resize", () => {
         camera.aspect = window.innerWidth / window.innerHeight;
         camera.updateProjectionMatrix();
 
         renderer.setSize( window.innerWidth, window.innerHeight );
 
-    })
+    });
     
     window.scene = scene;
     window.camera = camera;
