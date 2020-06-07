@@ -16,19 +16,23 @@ var threecap = new THREEcap();
 
 var scene, camera, renderer, stats, composer, capture;
 
-w.record = function(reset) {
+w.record = function(format, fps, size, reset) {
+    var format = format || 'mp4';
+    var fps = fps || 60;
+    var size = size || 1;
+    
     var rec = function() {
-        let div = 4;
         
         capture.record({
-            width: window.innerWidth / div,
-            height: window.innerHeight / div,
-            fps: 25,
+            width: window.innerWidth * size,
+            height: window.innerHeight * size,
+            fps: fps,
             time: window.lt,
-            format: 'gif',
+            format: format,
             composer: composer
         }).then(function(video) {
-            video.saveFile('myVideo.gif');
+            video.saveFile(Date.now() + '.' + format);
+            window.location.reload();
         });
     }
     
@@ -36,13 +40,14 @@ w.record = function(reset) {
     else rec();
 }
 
+w.r = w.record;
+
 w.init = function() {
     main(init, update);
 }
 
-export function threepeat(init, update, done) {
+export function threepeat(init, done) {
     w.init = init;
-    w.update = update;
     
     scene = new THREE.Scene();
     
@@ -93,7 +98,7 @@ export function threepeat(init, update, done) {
     window.renderer = renderer;
     window.composer = composer;
     
-    var update = init(scene, camera, renderer);
+    w.update = init(scene, camera, renderer);
     animate();
     if(done) done();
 }
