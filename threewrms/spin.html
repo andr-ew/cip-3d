@@ -26,17 +26,14 @@
             w.lt = 10;
             
             threepeat((scene, camera, renderer) => {
-
-                var animate;
-
                 var orbit = new OrbitControls( camera, renderer.domElement );
 
                 scene.add(tea);
 
                 camera.position.z = 300;
                 
-                return () => {
-                    tea.rotation.y += (2 * Math.PI) / w.lt / w.fps;
+                return (t) => {
+                    tea.rotation.y = (2 * Math.PI) * t;
                 }
             });
         </script>

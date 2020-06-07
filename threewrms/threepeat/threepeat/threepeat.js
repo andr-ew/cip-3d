@@ -1,3 +1,4 @@
+import * as THREE from './three/build/three.module.js';
 import { OrbitControls } from './three/examples/jsm/controls/OrbitControls.js';
 import { EffectComposer } from './three/examples/jsm/postprocessing/EffectComposer.js'
 import { MaskPass } from './three/examples/jsm/postprocessing/MaskPass.js'
@@ -9,8 +10,9 @@ import Stats from './three/examples/jsm/libs/stats.module.js';
 
 
 var w = window;
-w.lt = 10;
+w.ll = 10;
 w.fps = 60;
+w.t = 0;
 
 var threecap = new THREEcap();
 
@@ -20,14 +22,16 @@ w.record = function(format, fps, size, reset) {
     var format = format || 'mp4';
     var fps = fps || 60;
     var size = size || 1;
+    var reset = reset || true;
     
     var rec = function() {
+        w.t = 0;
         
         capture.record({
             width: window.innerWidth * size,
             height: window.innerHeight * size,
             fps: fps,
-            time: window.lt,
+            time: window.ll,
             format: format,
             composer: composer
         }).then(function(video) {
@@ -36,8 +40,10 @@ w.record = function(format, fps, size, reset) {
         });
     }
     
-    if(reset) main(w.init, w.update, rec);
-    else rec();
+//    if(reset) main(w.init, w.update, rec);
+//    else rec();
+    
+    rec();
 }
 
 w.r = w.record;
@@ -46,7 +52,7 @@ w.init = function() {
     main(init, update);
 }
 
-export function threepeat(init, done) {
+function threepeat(init, done) {
     w.init = init;
     
     scene = new THREE.Scene();
@@ -73,12 +79,23 @@ export function threepeat(init, done) {
     composer.addPass( effect );
 
     capture = new THREEcap({composer: composer, scriptbase: './threepeat/threecap/'});
-//  var captureui = new THREEcapUI(capture);
+    
+    var earlier = ( performance || Date ).now();
+    var ms = 0;
     
     var animate = function() {
         requestAnimationFrame( animate );
-
-        update();
+        
+        if(ms < w.ll * 1000) {
+            let now = ( performance || Date ).now();
+            
+            ms += now - earlier;
+            earlier = now;
+            
+        } else ms = 0;
+        
+        w.t = ms / w.ll / 1000;
+        update(w.t);
 
         stats.update();
         renderer.render( scene, camera );
@@ -102,3 +119,5 @@ export function threepeat(init, done) {
     animate();
     if(done) done();
 }
+
+export { threepeat }
