@@ -3,9 +3,9 @@
 	<head>
 		<meta charset="utf-8">
 		<title>wrms</title>
-        <style>
-			body { 
-                margin: 0; 
+    <style>
+			body {
+                margin: 0;
                 color: blue;
             }
 			canvas { display: block; }
@@ -17,21 +17,22 @@
         <script type="module" src="./threepeat/threepeat.js"></script>
         <script type="module">
             import * as THREE from './threepeat/three/build/three.module.js';
-            import { OrbitControls } from './threepeat/three/examples/jsm/controls/OrbitControls.js';
+            import { OrbitControls } from
+						'./threepeat/three/examples/jsm/controls/OrbitControls.js';
             import { makemodel, tea } from './models.js';
             import { threepeat } from './threepeat/threepeat.js';
-            
+
             var w = window;
-            
+
             w.lt = 10;
-            
+
             threepeat((scene, camera, renderer) => {
                 var orbit = new OrbitControls( camera, renderer.domElement );
 
                 scene.add(tea);
 
                 camera.position.z = 300;
-                
+
                 return (t) => {
                     tea.rotation.y = (2 * Math.PI) * t;
                 }
