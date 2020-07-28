@@ -12,7 +12,7 @@ import Stats from './three/examples/jsm/libs/stats.module.js';
 var w = window;
 w.ll = 10;
 w.fps = 60;
-w.t = 0;
+//w.t = 0;
 
 var threecap = new THREEcap();
 
@@ -23,10 +23,10 @@ var record = function(format, fps, size, reset) {
     var fps = fps || 60;
     var size = size || 1;
     var reset = reset || false;
-    
+
     var rec = function() {
         w.t = 0;
-        
+
         capture.record({
             width: window.innerWidth * size,
             height: window.innerHeight * size,
@@ -39,7 +39,7 @@ var record = function(format, fps, size, reset) {
             window.location.reload();
         });
     }
-    
+
     if(reset) w.reset;
     else rec();
 }
@@ -53,22 +53,22 @@ w.reset = function() {
 
 function threepeat(init, done) {
     w.init = init;
-    
+
     scene = new THREE.Scene();
-    
+
     camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 0.1, 1000 );
-    
+
     renderer = new THREE.WebGLRenderer({preserveDrawingBuffer: true, alpha: true});
     renderer.setSize( window.innerWidth, window.innerHeight );
     renderer.setPixelRatio( window.devicePixelRatio );
     document.body.appendChild( renderer.domElement );
     renderer.setClearColor( 0x0000ff, 1);
-    
+
     scene.background = null;
-    
+
     var stats = new Stats();
     document.body.appendChild( stats.dom );
-    
+
     composer = new EffectComposer( renderer );
     composer.addPass( new RenderPass( scene, camera) );
 
@@ -78,21 +78,21 @@ function threepeat(init, done) {
     composer.addPass( effect );
 
     capture = new THREEcap({composer: composer, scriptbase: './threepeat/threecap/'});
-    
+
     var earlier = ( performance || Date ).now();
     var ms = 0;
-    
+
     var animate = function() {
         requestAnimationFrame( animate );
-        
+
         if(ms < w.ll * 1000) {
             let now = ( performance || Date ).now();
-            
+
             ms += now - earlier;
             earlier = now;
-            
+
         } else ms = 0;
-        
+
         w.t = ms / w.ll / 1000;
         update(w.t);
 
@@ -100,7 +100,7 @@ function threepeat(init, done) {
         renderer.render( scene, camera );
         composer.render();
     };
-    
+
     window.addEventListener("resize", () => {
         camera.aspect = window.innerWidth / window.innerHeight;
         camera.updateProjectionMatrix();
@@ -108,12 +108,12 @@ function threepeat(init, done) {
         renderer.setSize( window.innerWidth, window.innerHeight );
 
     });
-    
+
     window.scene = scene;
     window.camera = camera;
     window.renderer = renderer;
     window.composer = composer;
-    
+
     w.update = init(scene, camera, renderer);
     animate();
     if(done) done();

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>wrms</title>
+    <style>
+			body { margin: 0; color: blue; }
+			canvas { display: block; }
+		</style>
+	</head>
+	<body>
+		<script src="./threepeat/three/build/three.min.js"></script>
+		<script src="./threepeat/threecap/threecap.js"></script>
+		<script type="module" src="./threepeat/threepeat.js"></script>
+		<script type="module">
+			import * as THREE from './threepeat/three/build/three.module.js';
+			import { OrbitControls } from
+				'./threepeat/three/examples/jsm/controls/OrbitControls.js';
+		    import { Wrm, makemodel, maketea, makecrv } from './wrms.js';
+		    import { threepeat } from './threepeat/threepeat.js';
+			import { Curves } from
+			'./threepeat/three/examples/jsm/curves/CurveExtras.js';
+
+		    var w = window;
+
+		    w.lt = 10;
+
+		    threepeat((scene, camera, renderer) => {
+		    	var orbit = new OrbitControls( camera, renderer.domElement );
+
+				let tf = new Curves.TrefoilKnot();
+				let kc = new Curves.KnotCurve();
+
+				// var parent = new THREE.Object3D();
+				// scene.add( parent );
+
+				var wrm = new Wrm(
+					maketea,
+					makecrv(function ( t, optionalTarget ) {
+
+						var point = optionalTarget || new THREE.Vector3();
+
+						t *= 2 * Math.PI;
+
+						var R = 20;
+						var s = 50;
+
+						var x = s * Math.sin( t );
+						var y = Math.cos( t ) * ( R + s * Math.cos( t ) ) ;
+						var z = Math.sin( t ) * ( R + s * Math.cos( t ) );
+
+						return point.set( x, y, z );
+					}),
+					20
+				);
+
+				// var tea = maketea();
+				// scene.add(tea);
+				// console.log(tea);
+
+		        camera.position.z = 300;
+
+		        return (t) => {
+					wrm.update(t);
+		        }
+		    });
+		</script>
+	</body>
+</html>

@@ -4,39 +4,38 @@
 		<meta charset="utf-8">
 		<title>wrms</title>
     <style>
-			body {
-                margin: 0;
-                color: blue;
-            }
+			body { margin: 0; color: blue; }
 			canvas { display: block; }
 		</style>
 	</head>
 	<body>
-        <script src="./threepeat/three/build/three.min.js"></script>
-        <script src="./threepeat/threecap/threecap.js"></script>
-        <script type="module" src="./threepeat/threepeat.js"></script>
-        <script type="module">
-            import * as THREE from './threepeat/three/build/three.module.js';
-            import { OrbitControls } from
-						'./threepeat/three/examples/jsm/controls/OrbitControls.js';
-            import { makemodel, tea } from './models.js';
-            import { threepeat } from './threepeat/threepeat.js';
+		<script src="./threepeat/three/build/three.min.js"></script>
+		<script src="./threepeat/threecap/threecap.js"></script>
+		<script type="module" src="./threepeat/threepeat.js"></script>
+		<script type="module">
+			import * as THREE from './threepeat/three/build/three.module.js';
+			import { OrbitControls } from
+				'./threepeat/three/examples/jsm/controls/OrbitControls.js';
+		    import { makemodel, tea } from './models.js';
+		    import { threepeat } from './threepeat/threepeat.js';
+			import { Curves } from
+			'./threepeat/three/examples/jsm/curves/CurveExtras.js';
 
-            var w = window;
+		    var w = window;
 
-            w.lt = 10;
+		    w.lt = 10;
 
-            threepeat((scene, camera, renderer) => {
-                var orbit = new OrbitControls( camera, renderer.domElement );
+		    threepeat((scene, camera, renderer) => {
+		    	var orbit = new OrbitControls( camera, renderer.domElement );
 
-                scene.add(tea);
+				scene.add(tea);
 
-                camera.position.z = 300;
+		        camera.position.z = 300;
 
-                return (t) => {
-                    tea.rotation.y = (2 * Math.PI) * t;
-                }
-            });
-        </script>
+		        return (t) => {
+		        	tea.rotation.y = (2 * Math.PI) * t;
+		        }
+		    });
+		</script>
 	</body>
 </html>
