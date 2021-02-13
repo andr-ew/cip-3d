@@ -20,42 +20,32 @@ export var makecrv = function(getPoint) {
         crv , 100, 1, 3, true );
 }
 
-export var makemodel = function(name, onload) {
+export var loadmodel = function(name, onload) {
     var objload = new OBJLoader();
-
-    var grp = new THREE.Group();
-//    scene.add(this.group);
-
     var bmload = new THREE.TextureLoader();
     //bmload.setOptions( { imageOrientation: 'flipY' } );
 
-    var me = {};
+    var mat, geo;
 
     bmload.load(
         // resource URL
         'mod/' + name + '.bmp',
-        ( tex ) => {
-            me.tex = tex;
-            me.mat = new THREE.MeshBasicMaterial( { map: me.tex } );
+        (tex) => {
+            mat = new THREE.MeshBasicMaterial({ map: tex });
 
             objload.load(
                 './mod/' + name + '.obj',
                 ( object ) => {
-                    object.traverse( function ( node ) {
+                    object.traverse(( child ) => {
+                        if ( child.geometry !== undefined ) {
+                            geo = child.geometry;
+                        }
+                    });
 
-                        //if ( node.isMesh ) {
-                            node.material = me.mat;
-                        // }
-
-                    } );
-
-                    //me.obj = object
-
-                    if(onload) onload(object);
+                    if(onload) onload(geo, mat);
                 },
                 undefined,
                 function ( error ) {
-
                     console.log(error);
                 }
             );
@@ -65,23 +55,30 @@ export var makemodel = function(name, onload) {
             console.log( err);
         }
     );
-
-    return grp;
 }
 
-export var maketea = (onload) => { return makemodel('teapot3', (obj) => {
+export var formatters = {}
 
-    // obj.rotateX(-Math.PI / 2);
-    obj.position.y = -50 * 0.25;
-    obj.scale.set(0.25, 0.25, 0.25);
+formatters['teapot3'] = (mesh) => {
+    mesh.position.y = -50 * 0.25;
+    mesh.scale.set(0.25, 0.25, 0.25);
 
-    // console.log(obj);
-    window.tea = obj;
+    return mesh
+}
 
-    if(onload) onload(obj);
-}); };
+export var makemodel = (name, onload) => {
+    loadmodel(name, (geo, mat) => {
+        var mesh = new THREE.Mesh( geo, mat );
 
-export var Wrm = function(makemodel, crv, nsegs) {
+        if(formatters[name]) {
+            formatters[name](mesh);
+        }
+
+        if(onload) onload(mesh);
+    });
+};
+
+export var Wrm = function(name, crv, nsegs) {
 
     var direction = new THREE.Vector3();
     var binormal = new THREE.Vector3();
@@ -91,14 +88,13 @@ export var Wrm = function(makemodel, crv, nsegs) {
 
     var segments = []
 
-    makemodel((model) => {
+    loadmodel(name, (geo, mat) => {
         for(let i = 0; i < nsegs; i++) {
-            let obj = model.clone;
-            obj.position.y = -50 * 0.25;
-            obj.scale.set(0.25, 0.25, 0.25);
+            var mesh = new THREE.Mesh( geo, mat );
+            if(formatters[name]) { formatters[name](mesh); }
 
-            segments[i] = obj;
-            scene.add( segments[i] );
+            segments[i] = mesh;
+            scene.add( mesh );
         }
     });
 
