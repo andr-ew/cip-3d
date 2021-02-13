@@ -1,12 +1,6 @@
-/**
- * @author mrdoob / http://mrdoob.com/
- */
-
 var Stats = function () {
 
 	var mode = 0;
-    
-    this.fps = 60;
 
 	var container = document.createElement( 'div' );
 	container.style.cssText = 'position:fixed;top:0;left:0;cursor:pointer;opacity:0.9;z-index:10000';
@@ -56,8 +50,6 @@ var Stats = function () {
 	return {
 
 		REVISION: 16,
-        
-        fps: 60,
 
 		dom: container,
 
@@ -81,7 +73,6 @@ var Stats = function () {
 			if ( time >= prevTime + 1000 ) {
 
 				fpsPanel.update( ( frames * 1000 ) / ( time - prevTime ), 100 );
-                this.fps = ( frames * 1000 ) / ( time - prevTime );
 
 				prevTime = time;
 				frames = 0;
@@ -120,9 +111,9 @@ Stats.Panel = function ( name, fg, bg ) {
 	var PR = round( window.devicePixelRatio || 1 );
 
 	var WIDTH = 80 * PR, HEIGHT = 48 * PR,
-			TEXT_X = 3 * PR, TEXT_Y = 2 * PR,
-			GRAPH_X = 3 * PR, GRAPH_Y = 15 * PR,
-			GRAPH_WIDTH = 74 * PR, GRAPH_HEIGHT = 30 * PR;
+		TEXT_X = 3 * PR, TEXT_Y = 2 * PR,
+		GRAPH_X = 3 * PR, GRAPH_Y = 15 * PR,
+		GRAPH_WIDTH = 74 * PR, GRAPH_HEIGHT = 30 * PR;
 
 	var canvas = document.createElement( 'canvas' );
 	canvas.width = WIDTH;

@@ -26,18 +26,17 @@ export var makemodel = function(name, onload) {
     var grp = new THREE.Group();
 //    scene.add(this.group);
 
-    var bmload = new THREE.ImageBitmapLoader();
-    bmload.setOptions( { imageOrientation: 'flipY' } );
+    var bmload = new THREE.TextureLoader();
+    //bmload.setOptions( { imageOrientation: 'flipY' } );
 
     var me = grp;
 
     bmload.load(
         // resource URL
         'mod/' + name + '.bmp',
-        ( imageBitmap ) => {
-            me.tex = new THREE.CanvasTexture( imageBitmap );
+        ( tex ) => {
+            me.tex = tex;
             me.mat = new THREE.MeshBasicMaterial( { map: me.tex } );
-            // me.mat = new THREE.MeshBasicMaterial();
 
             objload.load(
                 './mod/' + name + '.obj',
@@ -52,7 +51,6 @@ export var makemodel = function(name, onload) {
 
                     me.obj = object
 
-
                     me.add( me.obj );
 
                     if(onload) onload(object);
@@ -61,7 +59,6 @@ export var makemodel = function(name, onload) {
                 function ( error ) {
 
                     console.log(error);
-
                 }
             );
         },
