@@ -54,14 +54,13 @@
 				// 	20
 				// );
 
-				var tea = maketea();
-				scene.add(tea);
-				console.log(tea);
+				maketea((tea) => { scene.add(tea.clone()) });
+
 
 		        camera.position.z = 300;
 
 		        return (t) => {
-					wrm.update(t);
+					// wrm.update(t);
 		        }
 		    });
 		</script>

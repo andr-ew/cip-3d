@@ -24,7 +24,7 @@ function THREEcapFrame(width, height, depth, buffer, base64) {
     // private variable with getter, to prevent it from being serialized redundantly
     var _data;
     Object.defineProperty(this, 'data', {
-        enumerable: false, 
+        enumerable: false,
         get: function() {
             if (!_data) {
                 _data = new Uint8Array(this.buffer);
@@ -56,7 +56,7 @@ function THREEcapFramePool(width, height, depth) {
     this.frames = [];
     this.pending = [];
     this.allocations = 0;
-} 
+}
 THREEcapFramePool.prototype.setSize = function(width, height, depth) {
   this.width = width;
   this.height = height;
@@ -134,8 +134,8 @@ THREEcap.prototype.getSettings = function(args) {
     var key = keys[i];
     settings[key] = this.getSetting(key, args);
   }
-  
-  return settings; 
+
+  return settings;
 }
 THREEcap.prototype.getSetting = function(name, args) {
   if (typeof args[name] != 'undefined') {
@@ -155,7 +155,7 @@ THREEcap.prototype.record = function(settings) {
   });
 }
 THREEcap.prototype.attachComposer = function(composer) {
- console.log('do it!', composer, this);
+ //console.log('do it!', composer, this);
   var capturepass = new THREEcapRenderPass(this.settings.scriptbase);
 
   this.settings.renderpass = capturepass;
@@ -172,7 +172,7 @@ THREEcap.prototype.attachComposer = function(composer) {
 }
 
 THREEcap.prototype.play = function(url) {
-  
+
 }
 
 /**
@@ -238,7 +238,7 @@ function THREEcapRenderPass(scriptbase) {
 	this.scene.add( this.quad );
 
 	this.threecap = new THREEcap({useWorker: true, quality: 'veryfast', fps: 30, scriptbase: scriptbase, renderpass: this});
-    
+
     this.setSize = function() {}
 };
 
@@ -349,7 +349,7 @@ THREEcapRenderPass.prototype = {
 		return new Promise(function(resolve, reject) {
 			var worker = new Worker('/scripts/vrcade/imageworker-' + format + '.js');
 			worker.addEventListener('message', function(ev) {
-				resolve(ev.data);					
+				resolve(ev.data);
 			}.bind(this));
 
 			var workermsg = {
@@ -409,7 +409,7 @@ THREEcapVideo.prototype.getFrame = function() {
 };
 THREEcapVideo.prototype.addFrame = function(frame, usepool) {
   //var frame = this.getFrameFromData(framedata);
-  //console.log('addframe', frame, frame.buffer.byteLength); 
+  //console.log('addframe', frame, frame.buffer.byteLength);
   if (frame) {
     if (this.useWorker && !this.inWorker) {
       var msg = {
@@ -430,7 +430,7 @@ THREEcapVideo.prototype.addFrame = function(frame, usepool) {
         var bindata = atob(frame);
         compressedframe.buffer = compressedframe.buffer.slice(0, bindata.length);
         var framedata = compressedframe.data;
-        
+
         for (var i = 0; i < bindata.length; i++) {
           framedata[i] = bindata.charCodeAt(i);
         }
@@ -454,7 +454,7 @@ THREEcapVideo.prototype.addFrameBase64 = function(framestr) {
       var bindata = atob(framestr);
       compressedframe.buffer = compressedframe.buffer.slice(0, bindata.length);
       var framedata = compressedframe.data;
-      
+
       for (var i = 0; i < bindata.length; i++) {
         framedata[i] = bindata.charCodeAt(i);
       }
@@ -562,11 +562,11 @@ THREEcapVideo.prototype.handleWorkerResponse = function(ev) {
       break;
   }
 };
-THREEcapVideo.prototype.device_input_open = function(stream) { 
-  //console.log('INPUT DEVICE OPENED', stream); 
+THREEcapVideo.prototype.device_input_open = function(stream) {
+  //console.log('INPUT DEVICE OPENED', stream);
 };
-THREEcapVideo.prototype.device_input_close = function(stream) { 
-  //console.log('INPUT DEVICE CLOSED', stream, this.outputpos); 
+THREEcapVideo.prototype.device_input_close = function(stream) {
+  //console.log('INPUT DEVICE CLOSED', stream, this.outputpos);
   this.processResults([ { data: this.outputbuffer.subarray(0, this.outputpos) } ]);
 };
 THREEcapVideo.prototype.device_input_read = (function() {
@@ -574,8 +574,8 @@ THREEcapVideo.prototype.device_input_read = (function() {
             framedata = null,
             curroffset = 0,
             bufsize = 1024 * 1024*1024;
-    return function(stream, buffer, offset, length, position) { 
-        //console.log('DEVICE IS READING', stream, buffer, offset, length, position); 
+    return function(stream, buffer, offset, length, position) {
+        //console.log('DEVICE IS READING', stream, buffer, offset, length, position);
 
         //console.log('reading frame ' + currframe + ' of ' + this.expectedframes + ' expected (' + this.frames.length + ' queued)', length);
         if (currframe < this.expectedframes) {
@@ -585,7 +585,7 @@ THREEcapVideo.prototype.device_input_read = (function() {
                   //framedata = LZMA.decompress(this.frames[currframe].data);
                   framedata = this.frames[currframe].data;
               }
-              
+
 
               var maxlength = Math.min(framedata.length - curroffset, bufsize, length);
               var written = 0;
@@ -616,8 +616,8 @@ THREEcapVideo.prototype.device_input_read = (function() {
     };
 })();
 
-THREEcapVideo.prototype.device_output_open = function(stream) { 
-    //console.log('OUTPUT DEVICE OPENED', stream); 
+THREEcapVideo.prototype.device_output_open = function(stream) {
+    //console.log('OUTPUT DEVICE OPENED', stream);
     if (!this.outputbuffer) {
         this.blocksize = 1024 * 1024 * 10; // 10mb
         this.blockcount = 1;
@@ -626,10 +626,10 @@ THREEcapVideo.prototype.device_output_open = function(stream) {
         this.outputpos = 0;
     }
 };
-THREEcapVideo.prototype.device_output_close = function(stream) { 
-    //console.log('OUTPUT DEVICE CLOSED', stream); 
+THREEcapVideo.prototype.device_output_close = function(stream) {
+    //console.log('OUTPUT DEVICE CLOSED', stream);
 };
-THREEcapVideo.prototype.device_output_llseek = function(stream, offset, whence) { 
+THREEcapVideo.prototype.device_output_llseek = function(stream, offset, whence) {
     //console.log('seek!', offset, whence);
     var position = offset;     // SEEK_SET
 
@@ -643,12 +643,12 @@ THREEcapVideo.prototype.device_output_llseek = function(stream, offset, whence) 
         throw new FS.ErrnoError(ERRNO_CODES.EINVAL);
     }
     this.outputpos = position;
-    return position; 
+    return position;
 };
-THREEcapVideo.prototype.device_output_read = function(stream, buffer, offset, length, position) { 
+THREEcapVideo.prototype.device_output_read = function(stream, buffer, offset, length, position) {
     //console.log('OUTPUT READ????', offset, length);
 };
-THREEcapVideo.prototype.device_output_write = function(stream, buffer, offset, length, position) { 
+THREEcapVideo.prototype.device_output_write = function(stream, buffer, offset, length, position) {
     //console.log('output write: ' + length + ' bytes, ' + position + ' position, ' + offset + ' offset')
     var outputpos = (typeof position == 'number' ? position : this.outputpos);
 
@@ -710,7 +710,7 @@ THREEcapVideo.prototype.record = function(settings) {
   if (!this.inWorker) {
     this.scheduleFrames(width, height, fps, time);
   }
-  
+
   this.setSize(width, height);
 
   if (this.useWorker) {
@@ -739,7 +739,7 @@ THREEcapVideo.prototype.record = function(settings) {
         FS.mkdev('/input.raw', dev_input);
         FS.mkdev('/output/output.' + format, dev_output);
       }.bind(this),
-      memoryInitializerPrefixURL: this.scriptbase 
+      memoryInitializerPrefixURL: this.scriptbase
     };
 
     var args = [
@@ -808,7 +808,7 @@ THREEcapVideo.prototype.scheduleFrames = function(width, height, fps, time) {
 
 THREEcapVideo.prototype.scheduleFrame = function(width, height, frame, delay) {
   return new Promise(function(resolve, reject) {
-    setTimeout(function() { 
+    setTimeout(function() {
       //if (this.updateCaptureData(width, height)) {
         if (this.renderpass instanceof THREEcapRenderPass) {
           var imgdata = this.addFrameFromTHREE(this.renderpass);
@@ -854,7 +854,7 @@ THREEcapVideo.prototype.info = function() {
             arguments: [
                 '-codecs'
             ],
-            memoryInitializerPrefixURL: this.scriptbase 
+            memoryInitializerPrefixURL: this.scriptbase
         };
 
         ffmpeg_run(args);
@@ -902,35 +902,35 @@ THREEcapUI.prototype.createPanel = function() {
   panel.appendChild(h2);
 
   var resolutions = {
-        'canvas': 'canvas', 
-        '240p': '352x240', 
-        '360p': '480x360', 
-        '480p': '858x480', 
-        '720p': '1280x720', 
-        '1080p': '1920x1080', 
+        'canvas': 'canvas',
+        '240p': '352x240',
+        '360p': '480x360',
+        '480p': '858x480',
+        '720p': '1280x720',
+        '1080p': '1920x1080',
       },
       framerates = {
         '1 fps': 1,
-        '2 fps': 2,   
-        '5 fps': 5, 
-        '10 fps': 10, 
-        '15 fps': 15, 
-        '25 fps': 25, 
-        '30 fps': 30, 
-        '45 fps': 45, 
+        '2 fps': 2,
+        '5 fps': 5,
+        '10 fps': 10,
+        '15 fps': 15,
+        '25 fps': 25,
+        '30 fps': 30,
+        '45 fps': 45,
         '60 fps': 60
       },
       times = {
         '5s': 5,
-        '10s': 10, 
+        '10s': 10,
         '15s': 10,
-        '30s': 30, 
-        '45s': 45, 
+        '30s': 30,
+        '45s': 45,
         '1m': 60,
         '1m30s': 90,
-        '2m': 120, 
-        '3m': 180, 
-        '4m': 240, 
+        '2m': 120,
+        '3m': 180,
+        '4m': 240,
         '5m': 300
       },
       formats = {'mp4': 'mp4', 'gif': 'gif', 'webm': 'webm'};
@@ -974,7 +974,7 @@ THREEcapUI.prototype.createDropdown = function(labeltext, options, selected) {
   container.appendChild(label);
 
   var optionnames = Object.keys(options);
-  
+
   optionnames.forEach(function(o) {
     var option = document.createElement('option');
     option.value = options[o];
@@ -1023,12 +1023,12 @@ THREEcapUI.prototype.handleButtonClick = function(ev) {
   }
 
   this.capture.record({
-      width: res[0], 
+      width: res[0],
       height: res[1],
       fps: fps,
       format: format,
       time: time
-    }).then(function(video) { 
+    }).then(function(video) {
       button.innerHTML = 'Record';
       button.className = '';
       this.settings['filename'] = this.getTimestampedFilename('threecap');
@@ -1058,4 +1058,3 @@ console.log('click click!', a);
   //window.URL.revokeObjectURL(url);
   //document.body.removeChild(a);
 }
-

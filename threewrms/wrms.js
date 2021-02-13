@@ -29,7 +29,7 @@ export var makemodel = function(name, onload) {
     var bmload = new THREE.TextureLoader();
     //bmload.setOptions( { imageOrientation: 'flipY' } );
 
-    var me = grp;
+    var me = {};
 
     bmload.load(
         // resource URL
@@ -49,9 +49,7 @@ export var makemodel = function(name, onload) {
 
                     } );
 
-                    me.obj = object
-
-                    me.add( me.obj );
+                    //me.obj = object
 
                     if(onload) onload(object);
                 },
@@ -72,11 +70,15 @@ export var makemodel = function(name, onload) {
 }
 
 export var maketea = (onload) => { return makemodel('teapot3', (obj) => {
+
     // obj.rotateX(-Math.PI / 2);
     obj.position.y = -50 * 0.25;
     obj.scale.set(0.25, 0.25, 0.25);
 
-    if(onload) onload(object);
+    // console.log(obj);
+    window.tea = obj;
+
+    if(onload) onload(obj);
 }); };
 
 export var Wrm = function(makemodel, crv, nsegs) {
@@ -89,10 +91,16 @@ export var Wrm = function(makemodel, crv, nsegs) {
 
     var segments = []
 
-    for(let i = 0; i < nsegs; i++) {
-        segments[i] = makemodel();
-        scene.add( segments[i] );
-    }
+    makemodel((model) => {
+        for(let i = 0; i < nsegs; i++) {
+            let obj = model.clone;
+            obj.position.y = -50 * 0.25;
+            obj.scale.set(0.25, 0.25, 0.25);
+
+            segments[i] = obj;
+            scene.add( segments[i] );
+        }
+    });
 
     this.update = function(T) {
 
