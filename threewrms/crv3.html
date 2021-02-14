@@ -25,41 +25,61 @@
 
 		    w.lt = 10;
 
-		    threepeat((scene, camera, renderer) => {
-		    	var orbit = new OrbitControls( camera, renderer.domElement );
+			var imgload = new THREE.TextureLoader();
 
-				let tf = new Curves.TrefoilKnot(30);
-				let kc = new Curves.KnotCurve(30);
+			imgload.load(
+				'img/IMG_0618.jpeg',
+				// 'img/100_3995.JPG',
+				// 'img/Screen Shot 2019-09-04 at 4.25.54 PM.png',
+				// 'img/Screen Shot 2019-06-28 at 3.37.36 PM.png',
+		        //'img/Screen Shot 2019-06-28 at 2.14.59 PM.png',
+				//'img/equirect.png',
+		        (tex) => {
 
-				var parent = new THREE.Object3D();
-				scene.add( parent );
+				    threepeat((scene, camera, renderer) => {
 
-				var wrm = new Wrm(
-					'teapot3',
-					makecrv(function ( t, optionalTarget ) {
+						const pmremGenerator = new THREE.PMREMGenerator( renderer );
+						var hdrCubeRenderTarget = pmremGenerator.fromEquirectangular( tex );
+						tex.dispose();
+						pmremGenerator.dispose();
 
-						var point = optionalTarget || new THREE.Vector3();
+						scene.background = hdrCubeRenderTarget.texture;
 
-						t = 2 * Math.PI * t;
+				    	var orbit = new OrbitControls( camera, renderer.domElement );
 
-						var x = - 0.22 * Math.cos( t ) - 1.28 * Math.sin( t ) - 0.44 * Math.cos( 3 * t ) - 0.78 * Math.sin( 3 * t );
-						var y = - 0.1 * Math.cos( 2 * t ) - 0.27 * Math.sin( 2 * t ) + 0.38 * Math.cos( 4 * t ) + 0.46 * Math.sin( 4 * t );
-						var z = 0.7 * Math.cos( 3 * t ) - 0.4 * Math.sin( 3 * t );
+						let tf = new Curves.TrefoilKnot(30);
+						let kc = new Curves.KnotCurve(30);
 
-						return point.set( x, y, z ).multiplyScalar( 60 );
-					}),
-					120
-				);
+						var parent = new THREE.Object3D();
+						scene.add( parent );
 
-				//makemodel('teapot3', (tea) => { scene.add(tea) });
+						var wrm = new Wrm(
+							'teapot3',
+							makecrv(function ( t, optionalTarget ) {
+
+								var point = optionalTarget || new THREE.Vector3();
+
+								t = 2 * Math.PI * t;
+
+								var x = - 0.22 * Math.cos( t ) - 1.28 * Math.sin( t ) - 0.44 * Math.cos( 3 * t ) - 0.78 * Math.sin( 3 * t );
+								var y = - 0.1 * Math.cos( 2 * t ) - 0.27 * Math.sin( 2 * t ) + 0.38 * Math.cos( 4 * t ) + 0.46 * Math.sin( 4 * t );
+								var z = 0.7 * Math.cos( 3 * t ) - 0.4 * Math.sin( 3 * t );
+
+								return point.set( x, y, z ).multiplyScalar( 60 );
+							}),
+							120
+						);
+
+						//makemodel('teapot3', (tea) => { scene.add(tea) });
 
 
-		        camera.position.z = 300;
+				        camera.position.z = 300;
 
-		        return (t) => {
-					wrm.update(t/2);
-		        }
-		    });
+				        return (t) => {
+							wrm.update(t/2);
+				        }
+				    });
+				});
 		</script>
 	</body>
 </html>
