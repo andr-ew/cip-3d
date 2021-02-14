@@ -1,11 +1,5 @@
 import * as THREE from './three/build/three.module.js';
 import { OrbitControls } from './three/examples/jsm/controls/OrbitControls.js';
-import { EffectComposer } from './three/examples/jsm/postprocessing/EffectComposer.js'
-import { MaskPass } from './three/examples/jsm/postprocessing/MaskPass.js'
-import { ShaderPass } from './three/examples/jsm/postprocessing/ShaderPass.js'
-import { RenderPass } from './three/examples/jsm/postprocessing/RenderPass.js'
-import { DotScreenShader } from './three/examples/jsm/shaders/DotScreenShader.js'
-import { RGBShiftShader } from './three/examples/jsm/shaders/RGBShiftShader.js'
 import Stats from './three/examples/jsm/libs/stats.module.js';
 
 
@@ -16,7 +10,7 @@ w.fps = 60;
 
 var threecap = new THREEcap();
 
-var scene, camera, renderer, stats, composer, capture;
+var scene, camera, renderer, stats;
 
 var record = function(format, fps, size, reset) {
     var format = format || 'mp4';
@@ -24,24 +18,12 @@ var record = function(format, fps, size, reset) {
     var size = size || 1;
     var reset = reset || false;
 
-    var rec = function() {
-        w.t = 0;
+    /*
+    width: window.innerWidth * size,
+    height: window.innerHeight * size,
+    fps: fps,
+    */
 
-        capture.record({
-            width: window.innerWidth * size,
-            height: window.innerHeight * size,
-            fps: fps,
-            time: window.ll,
-            format: format,
-            composer: composer
-        }).then(function(video) {
-            video.saveFile(Date.now() + '.' + format);
-            window.location.reload();
-        });
-    }
-
-    if(reset) w.reset;
-    else rec();
 }
 
 w.record = record;
@@ -50,6 +32,16 @@ w.r = w.record;
 w.reset = function() {
     threepeat(w.init, w.update);
 }
+
+function dataURItoBlob(dataURI) {
+    var mimetype = dataURI.split(",")[0].split(':')[1].split(';')[0];
+    var byteString = atob(dataURI.split(',')[1]);
+    var u8a = new Uint8Array(byteString.length);
+    for (var i = 0; i < byteString.length; i++) {
+        u8a[i] = byteString.charCodeAt(i);
+    }
+    return new Blob([u8a.buffer], { type: mimetype });
+};
 
 function threepeat(init, done) {
     w.init = init;
@@ -69,37 +61,6 @@ function threepeat(init, done) {
     var stats = new Stats();
     document.body.appendChild( stats.dom );
 
-    composer = new EffectComposer( renderer );
-    composer.addPass( new RenderPass( scene, camera) );
-
-
-    var effect = new ShaderPass( RGBShiftShader );
-    effect.renderToScreen = false;
-    composer.addPass( effect );
-
-    capture = new THREEcap({composer: composer, scriptbase: './threepeat/threecap/'});
-
-    var earlier = ( performance || Date ).now();
-    var ms = 0;
-
-    var animate = function() {
-        requestAnimationFrame( animate );
-
-        if(ms < w.ll * 1000) {
-            let now = ( performance || Date ).now();
-
-            ms += now - earlier;
-            earlier = now;
-
-        } else ms = 0;
-
-        w.t = ms / w.ll / 1000;
-        update(w.t);
-
-        stats.update();
-        renderer.render( scene, camera );
-        composer.render();
-    };
 
     window.addEventListener("resize", () => {
         camera.aspect = window.innerWidth / window.innerHeight;
@@ -112,10 +73,22 @@ function threepeat(init, done) {
     window.scene = scene;
     window.camera = camera;
     window.renderer = renderer;
-    window.composer = composer;
-
     w.update = init(scene, camera, renderer);
-    animate();
+    //animate();
+
+    var len = w.fps * w.ll;
+    for (var i = 0; i < len; i++) {
+
+         update(i/(w.fps * w.ll));
+         renderer.render( scene, camera );
+
+         var r = new XMLHttpRequest();
+         var message = i == len - 1 ? 'end' : 'name';
+         r.open('POST', 'http://localhost:3999/' + message, false);
+         var blob = dataURItoBlob(renderer.domElement.toDataURL());
+         r.send(blob);
+    }
+
     if(done) done();
 }
 
