@@ -62,6 +62,7 @@ export var formatters = {}
 formatters['teapot3'] = (mesh) => {
     mesh.position.y = -50 * 0.25;
     mesh.scale.set(0.25, 0.25, 0.25);
+    mesh.rotateX(-Math.PI/2);
 
     return mesh
 }
@@ -93,8 +94,10 @@ export var Wrm = function(name, crv, nsegs) {
             var mesh = new THREE.Mesh( geo, mat );
             if(formatters[name]) { formatters[name](mesh); }
 
-            segments[i] = mesh;
-            scene.add( mesh );
+            segments[i] = new THREE.Group();
+            segments[i].add(mesh)
+
+            scene.add( segments[i] );
         }
     });
 
