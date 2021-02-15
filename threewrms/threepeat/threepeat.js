@@ -2,29 +2,70 @@ import * as THREE from './three/build/three.module.js';
 import { OrbitControls } from './three/examples/jsm/controls/OrbitControls.js';
 import Stats from './three/examples/jsm/libs/stats.module.js';
 
-
 var w = window;
 w.ll = 10;
 w.fps = 60;
+w.aspect = [1920, 1080];
+
 //w.t = 0;
 
-var threecap = new THREEcap();
-
 var scene, camera, renderer, stats;
+var recording = false, size = [];
 
-var record = function(format, fps, size, reset) {
-    var format = format || 'mp4';
-    var fps = fps || 60;
-    var size = size || 1;
-    var reset = reset || false;
+var resize = function(w, h) {
+    if(w && h) {
+        size = [ w, h ];
+    }
 
-    /*
-    width: window.innerWidth * size,
-    height: window.innerHeight * size,
-    fps: fps,
-    */
+    camera.aspect = size[0] / size[1];
+    camera.updateProjectionMatrix();
 
+    renderer.setSize(size[0], size[1]);
 }
+
+var windowResize = () => { resize(window.innerWidth, window.innerHeight) }
+
+var record = function(name = ("output" + Date.now()), format = ".mp4", sz = 1, fps = 60) {
+    recording = true;
+
+    resize( w.aspect[0] * sz, w.aspect[1] * sz);
+    window.addEventListener("resize", resize);
+
+    var len = w.fps * w.ll;
+    for (var i = 0; i < len; i++) {
+        update(i/(w.fps * w.ll));
+        renderer.render( scene, camera );
+
+        var r = new XMLHttpRequest();
+        var message = i == len - 1 ? 'end' : (name);
+        r.open('POST', 'http://localhost:3999/' + message, false);
+        var blob = dataURItoBlob(renderer.domElement.toDataURL());
+        r.send(blob);
+    }
+}
+
+var earlier = 0;
+var ms = 0;
+
+var animate = function() {
+    if(!recording) {
+        requestAnimationFrame( animate );
+
+        if(ms < w.ll * 1000) {
+            let now = ( performance || Date ).now();
+
+            ms += now - earlier;
+            earlier = now;
+
+        } else ms = 0;
+
+        w.t = ms / w.ll / 1000;
+        update(w.t);
+
+        stats.update();
+        renderer.render( scene, camera );
+    }
+};
 
 w.record = record;
 w.r = w.record;
@@ -58,36 +99,38 @@ function threepeat(init, done) {
 
     scene.background = null;
 
-    var stats = new Stats();
+    stats = new Stats();
     document.body.appendChild( stats.dom );
 
+    var orbit = new OrbitControls( camera, renderer.domElement );
 
-    window.addEventListener("resize", () => {
-        camera.aspect = window.innerWidth / window.innerHeight;
-        camera.updateProjectionMatrix();
+    orbit.get = function() {
+        return {
+            target: (new THREE.Vector3()).copy(this.target),
+            position: (new THREE.Vector3()).copy(this.object.position),
+            zoom: this.object.zoom
+        }
+    }
 
-        renderer.setSize( window.innerWidth, window.innerHeight );
+    orbit.set = function(get) {
+        this.target0.copy(get.target);
+        this.position0.copy(get.position);
+        this.zoom0 = get.zoom;
 
-    });
+        this.reset();
+    }
+
+    window.orbit = orbit;
+
+    window.addEventListener("resize", windowResize);
 
     window.scene = scene;
     window.camera = camera;
     window.renderer = renderer;
     w.update = init(scene, camera, renderer);
-    //animate();
 
-    var len = w.fps * w.ll;
-    for (var i = 0; i < len; i++) {
-
-         update(i/(w.fps * w.ll));
-         renderer.render( scene, camera );
-
-         var r = new XMLHttpRequest();
-         var message = i == len - 1 ? 'end' : 'name';
-         r.open('POST', 'http://localhost:3999/' + message, false);
-         var blob = dataURItoBlob(renderer.domElement.toDataURL());
-         r.send(blob);
-    }
+    earlier = ( performance || Date ).now();
+    animate();
 
     if(done) done();
 }

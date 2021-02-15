@@ -10,7 +10,7 @@ var child;
 
 var spawnff = function(name) {
     var child = cp.spawn('ffmpeg', [ '-f', 'image2pipe', '-framerate', '60', '-i', '-', '-c:v', 'libx264', '-vf', 'format=yuv420p', '-r', '60',
-        '-movflags', '+faststart', name + '.mp4' ]);
+        '-movflags', '+faststart', '../' + name + '.mp4' ]);
 
     child.stdin.on('close', (code) => {
         console.log('child.stdin close: ' + code)

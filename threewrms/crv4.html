@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>wrms</title>
+    <style>
+			body { margin: 0; color: blue; }
+			canvas { display: block; }
+		</style>
+	</head>
+	<body>
+		<script src="./threepeat/three/build/three.min.js"></script>
+		<script type="module" src="./threepeat/threepeat.js"></script>
+		<script type="module">
+			import * as THREE from './threepeat/three/build/three.module.js';
+		    import { Wrm, loadmodel, makemodel, makecrv } from './wrms.js';
+		    import { threepeat } from './threepeat/threepeat.js';
+			import { Curves } from
+			'./threepeat/three/examples/jsm/curves/CurveExtras.js';
+
+		    var w = window;
+
+		    w.lt = 10;
+
+			var imgload = new THREE.TextureLoader();
+
+			imgload.load(
+				'img/Screen Shot 2021-02-14 at 5.33.48 PM.png',
+				// 'img/100_3995.JPG',
+				// 'img/Screen Shot 2019-09-04 at 4.25.54 PM.png',
+				// 'img/Screen Shot 2019-06-28 at 3.37.36 PM.png',
+		        //'img/Screen Shot 2019-06-28 at 2.14.59 PM.png',
+				//'img/equirect.png',
+		        (tex) => {
+
+				    threepeat((scene, camera, renderer) => {
+
+						const pmremGenerator = new THREE.PMREMGenerator( renderer );
+						var hdrCubeRenderTarget = pmremGenerator.fromEquirectangular( tex );
+						tex.dispose();
+						pmremGenerator.dispose();
+
+						scene.background = hdrCubeRenderTarget.texture;
+
+						let tf = new Curves.TrefoilKnot(30);
+						let kc = new Curves.KnotCurve(30);
+
+						var parent = new THREE.Object3D();
+						scene.add( parent );
+
+						var wrm = new Wrm(
+							'teapot3',
+							makecrv(function ( t, optionalTarget ) {
+
+								var point = optionalTarget || new THREE.Vector3();
+
+								t *= 2 * Math.PI;
+
+								var R = 20;
+								var s = 40;
+
+								var sz = 2;
+
+								var x = Math.pow(t * 2, 2);
+								var y = s * 2 * Math.sin(3* t ) * (Math.cos( 2*t ) ) ;
+								var z = s * 3 * Math.sin( 2*t ) * (Math.cos( 5* t ) )/2;
+
+								return point.set( x * sz, y * sz, z * sz );
+							}),
+							120
+						);
+
+						//makemodel('teapot3', (tea) => { scene.add(tea) });
+
+
+				        camera.position.z = 300;
+
+				        return (t) => {
+							wrm.update(t/2);
+				        }
+				    });
+				});
+		</script>
+	</body>
+</html>

@@ -26,11 +26,12 @@
 		    w.lt = 10;
 
 		    threepeat((scene, camera, renderer) => {
+
 		    	var orbit = new OrbitControls( camera, renderer.domElement );
 
 				let tf = new Curves.TrefoilKnot();
 				let kc = new Curves.KnotCurve();
-				
+
 
 				var parent = new THREE.Object3D();
 				scene.add( parent );
@@ -44,17 +45,18 @@
 						t *= 2 * Math.PI;
 
 						var R = 20;
-						var s = 50;
+						var s = 40;
 
-						var sz = 1.5;
+						var sz = 2;
 
-						var x = s * Math.sin( t );
-						var y = Math.cos( t ) * ( R + s * Math.cos( t ) ) ;
-						var z = Math.sin( t ) * ( R + s * Math.cos( t ) );
+						// var x = Math.pow(t * 2, 2);
+						var x = 25 * sz * t;
+						var y = s * 2 * Math.sin(3* t ) * (Math.cos( 2*t ) ) ;
+						var z = s * 3 * Math.sin( 2*t ) * (Math.cos( 5* t ) )/2;
 
 						return point.set( x * sz, y * sz, z * sz );
 					}),
-					60
+					200
 				);
 
 				//makemodel('teapot3', (tea) => { scene.add(tea) });
@@ -63,7 +65,7 @@
 		        camera.position.z = 300;
 
 		        return (t) => {
-					wrm.update(t);
+					wrm.update(t/3);
 		        }
 		    });
 		</script>
