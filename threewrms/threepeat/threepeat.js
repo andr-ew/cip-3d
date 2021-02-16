@@ -104,22 +104,22 @@ function threepeat(init, done) {
 
     var orbit = new OrbitControls( camera, renderer.domElement );
 
-    orbit.get = function() {
-        var t = {}
-        return {
-            target: (new THREE.Vector3()).copy(this.target),
-            position: (new THREE.Vector3()).copy(this.object.position),
-            zoom: this.object.zoom
-        }
-    }
-
-    orbit.set = function(get) {
-        this.target0.copy(get.target);
-        this.position0.copy(get.position);
-        this.zoom0 = get.zoom;
-
-        this.reset();
-    }
+    // orbit.get = function() {
+    //     var t = {}
+    //     return {
+    //         target: (new THREE.Vector3()).copy(this.target),
+    //         position: (new THREE.Vector3()).copy(this.object.position),
+    //         zoom: this.object.zoom
+    //     }
+    // }
+    //
+    // orbit.set = function(get) {
+    //     this.target0.copy(get.target);
+    //     this.position0.copy(get.position);
+    //     this.zoom0 = get.zoom;
+    //
+    //     this.reset();
+    // }
 
     window.orbit = orbit;
 

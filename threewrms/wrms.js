@@ -9,6 +9,20 @@ Crv.prototype.constructor = Crv;
 
 var w = window;
 
+w.frames = [];
+w.addf = () => {
+    w.frames.push(new THREE.Spherical().setFromVector3(w.camera.position));
+}
+
+w.getCameraSpherical = () => {
+    return new THREE.Spherical().setFromVector3(w.camera.position);
+}
+
+w.setCameraSpherical = (sp) => {
+    w.camera.position.setFromSpherical(sp);
+    w.camera.lookAt(0,0,0);
+}
+
 export var makecrv = function(getPoint) {
     let crv = new Crv();
     crv.getPoint = getPoint;
@@ -150,28 +164,21 @@ export var Seq = function(args) {
     var tweens = [];
     var grp = new TWEEN.Group();
 
-    // var state = {
-    //     target: (new THREE.Vector3()).copy(args[0][1].target),
-    //     position: (new THREE.Vector3()).copy(args[0][1].position),
-    //     zoom: args[0][1].zoom
-    // };
+    var state = new THREE.Spherical().copy(args[0][1]);
 
     var time = (t) => {
         return t * 1000;
     }
 
-    var on = (v) => {
-        //orbit.set(v);
-        //console.log("onUpdate");
-        console.log(v);
-        camera.updateProjectionMatrix();
+    var on = () => {
+        w.camera.position.setFromSpherical(state);
         camera.lookAt(0,0,0);
     }
 
     for(let i = 0; i < args.length; i++) {
-        tweens[i] = new TWEEN.Tween(window.camera.position, grp)
+        tweens[i] = new TWEEN.Tween(state, grp)
             .to(args[i][1], time(args[i][0]))
-            .easing(TWEEN.Easing.Sinusoidal.InOut)
+            .easing(TWEEN.Easing.Quadratic.InOut)
             .onUpdate(on);
 
         let last = i == 0 ? args.length - 1 : i - 1;
@@ -187,6 +194,6 @@ export var Seq = function(args) {
         grp.update()
     }
 
-    // on(state);
+    on(state);
     tweens[1].start();
 }
