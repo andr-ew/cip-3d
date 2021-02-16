@@ -33,7 +33,7 @@ var record = function(name = ("output" + Date.now()), format = ".mp4", sz = 1, f
 
     var len = w.fps * w.ll;
     for (var i = 0; i < len; i++) {
-        update(i/(w.fps * w.ll));
+        update(i/(w.fps * w.ll), (i/w.fps) * 1000);
         renderer.render( scene, camera );
 
         var r = new XMLHttpRequest();
@@ -60,7 +60,7 @@ var animate = function() {
         } else ms = 0;
 
         w.t = ms / w.ll / 1000;
-        update(w.t);
+        update(w.t, ms);
 
         stats.update();
         renderer.render( scene, camera );
@@ -105,6 +105,7 @@ function threepeat(init, done) {
     var orbit = new OrbitControls( camera, renderer.domElement );
 
     orbit.get = function() {
+        var t = {}
         return {
             target: (new THREE.Vector3()).copy(this.target),
             position: (new THREE.Vector3()).copy(this.object.position),

@@ -145,3 +145,48 @@ export var Wrm = function(name, crv, nsegs) {
         }
     }
 }
+
+export var Seq = function(args) {
+    var tweens = [];
+    var grp = new TWEEN.Group();
+
+    // var state = {
+    //     target: (new THREE.Vector3()).copy(args[0][1].target),
+    //     position: (new THREE.Vector3()).copy(args[0][1].position),
+    //     zoom: args[0][1].zoom
+    // };
+
+    var time = (t) => {
+        return t * 1000;
+    }
+
+    var on = (v) => {
+        //orbit.set(v);
+        //console.log("onUpdate");
+        console.log(v);
+        camera.updateProjectionMatrix();
+        camera.lookAt(0,0,0);
+    }
+
+    for(let i = 0; i < args.length; i++) {
+        tweens[i] = new TWEEN.Tween(window.camera.position, grp)
+            .to(args[i][1], time(args[i][0]))
+            .easing(TWEEN.Easing.Sinusoidal.InOut)
+            .onUpdate(on);
+
+        let last = i == 0 ? args.length - 1 : i - 1;
+        if(args[last][2]) {
+            tweens[i].delay(time(args[last][2]))
+        }
+    }
+
+    for(let i = 0; i < tweens.length - 1; i++) tweens[i].chain(tweens[i + 1]);
+    tweens[tweens.length - 1].chain(tweens[0]);
+
+    this.update = function(ms) {
+        grp.update()
+    }
+
+    // on(state);
+    tweens[1].start();
+}

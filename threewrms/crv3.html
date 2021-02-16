@@ -10,22 +10,89 @@
 	</head>
 	<body>
 		<script src="./threepeat/three/build/three.min.js"></script>
-		<script src="./threepeat/threecap/threecap.js"></script>
+		<script src="./threepeat/tween.umd.js"></script>
 		<script type="module" src="./threepeat/threepeat.js"></script>
 		<script type="module">
 			import * as THREE from './threepeat/three/build/three.module.js';
 			import { OrbitControls } from
 				'./threepeat/three/examples/jsm/controls/OrbitControls.js';
-		    import { Wrm, loadmodel, makemodel, makecrv } from './wrms.js';
+		    import { Wrm, loadmodel, makemodel, makecrv, Seq } from './wrms.js';
 		    import { threepeat } from './threepeat/threepeat.js';
 			import { Curves } from
 			'./threepeat/three/examples/jsm/curves/CurveExtras.js';
 
 		    var w = window;
 
-		    w.lt = 10;
+		    w.ll = 20;
 
 			var imgload = new THREE.TextureLoader();
+			var orbits = [
+			  {
+			    // "target": {
+			    //   "x": 0,
+			    //   "y": 0,
+			    //   "z": 0
+			    // },
+			    // "position": {
+			      "x": -61.6053626894785,
+			      "y": -20.871743790295138,
+			      "z": 65.35511893835441
+			    // },
+			    // "zoom": 1
+			  },
+			  {
+			    // "target": {
+			    //   "x": 0,
+			    //   "y": 0,
+			    //   "z": 0
+			    // },
+			    // "position": {
+			      "x": 81.27121621801363,
+			      "y": 0.6552150684068174,
+			      "z": -17.87758044487992
+			    // },
+			    // "zoom": 1
+			  },
+			  {
+			    // "target": {
+			    //   "x": 0,
+			    //   "y": 0,
+			    //   "z": 0
+			    // },
+			    // "position": {
+			      "x": -76.74118246853925,
+			      "y": -25.153948986180325,
+			      "z": 20.077787194687897
+			    // },
+			    // "zoom": 1
+			  },
+			  {
+			    // "target": {
+			    //   "x": 0,
+			    //   "y": 0,
+			    //   "z": 0
+			    // },
+			    // "position": {
+			      "x": -92.26396654180213,
+			      "y": 50.85912736190672,
+			      "z": 249.4118524488325
+			    // },
+			    // "zoom": 1
+			  },
+			  {
+			    // "target": {
+			    //   "x": 0,
+			    //   "y": 0,
+			    //   "z": 0
+			    // },
+			    // "position": {
+			      "x": 229.37507070182608,
+			      "y": 130.73360067385408,
+			      "z": 60.01137471664247
+			    // },
+			    // "zoom": 1
+			  }
+		  	];
 
 			imgload.load(
 				'img/IMG_0618.jpeg',
@@ -45,7 +112,7 @@
 
 						scene.background = hdrCubeRenderTarget.texture;
 
-				    	var orbit = new OrbitControls( camera, renderer.domElement );
+						//sky(tex);
 
 						let tf = new Curves.TrefoilKnot(30);
 						let kc = new Curves.KnotCurve(30);
@@ -70,13 +137,21 @@
 							120
 						);
 
-						//makemodel('teapot3', (tea) => { scene.add(tea) });
+						var seq = new Seq([
+							[ 1, orbits[0], 1 ],
+							[ 1, orbits[1], 1 ],
+							[ 1, orbits[2], 1 ],
+							[ 1, orbits[3], 1 ],
+							[ 1, orbits[4], 1 ]
+						]);
 
+						//makemodel('teapot3', (tea) => { scene.add(tea) });
 
 				        camera.position.z = 300;
 
-				        return (t) => {
-							wrm.update(t/2);
+				        return (t, ms) => {
+							wrm.update(t);
+							seq.update();
 				        }
 				    });
 				});
