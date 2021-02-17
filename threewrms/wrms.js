@@ -14,13 +14,20 @@ w.addf = () => {
     w.frames.push(new THREE.Spherical().setFromVector3(w.camera.position));
 }
 
-w.getCameraSpherical = () => {
-    return new THREE.Spherical().setFromVector3(w.camera.position);
-}
-
-w.setCameraSpherical = (sp) => {
-    w.camera.position.setFromSpherical(sp);
-    w.camera.lookAt(0,0,0);
+var sphericalDistance = (a, b) => {
+    return Math.sqrt(
+        Math.pow(a.radius, 2) + Math.pow(b.radius, 2)
+        - (
+            2 * a.radius * b.radius
+            * (
+                (
+                    Math.sin(a.theta) * Math.sin(b.theta)
+                    * Math.cos(a.phi - b.phi)
+                )
+                + (Math.cos(a.theta) * Math.cos(b.theta))
+            )
+        )
+    );
 }
 
 export var makecrv = function(getPoint) {
@@ -74,6 +81,14 @@ export var loadmodel = function(name, onload) {
 export var formatters = {}
 
 formatters['teapot3'] = (mesh) => {
+    // mesh.position.y = -50 * 0.25;
+    mesh.scale.set(0.25, 0.25, 0.25);
+    // mesh.rotateX(-Math.PI/2);
+
+    return mesh
+}
+
+formatters['boquet'] = (mesh) => {
     mesh.position.y = -50 * 0.25;
     mesh.scale.set(0.25, 0.25, 0.25);
     mesh.rotateX(-Math.PI/2);
@@ -93,7 +108,7 @@ export var makemodel = (name, onload) => {
     });
 };
 
-export var Wrm = function(name, crv, nsegs) {
+export var Wrm = function(name, crv, nsegs, onload) {
 
     var direction = new THREE.Vector3();
     var binormal = new THREE.Vector3();
@@ -113,6 +128,8 @@ export var Wrm = function(name, crv, nsegs) {
 
             scene.add( segments[i] );
         }
+
+        if(onload) onload();
     });
 
     this.update = function(T) {
@@ -182,6 +199,12 @@ export var Seq = function(args) {
             .onUpdate(on);
 
         let last = i == 0 ? args.length - 1 : i - 1;
+
+        console.log(
+            "distance " + i + ", " + last + ": "
+            + sphericalDistance(args[i][1], args[last][1])
+        );
+
         if(args[last][2]) {
             tweens[i].delay(time(args[last][2]))
         }
@@ -197,3 +220,39 @@ export var Seq = function(args) {
     on(state);
     tweens[1].start();
 }
+
+export var Seq2 = function(frames, state, update, time, wait, ease, looptime) {
+    var tweens = [], times = [], waits = [], duration = 0;
+    var grp = new TWEEN.Group();
+    var init = state.clone();
+
+    for(let i = 0; i < frames.length; i++) {
+        let last = i == 0 ? frames.length - 1 : i - 1;
+
+        times[i] = time(i) * sphericalDistance(frames[last], frames[i]);
+        waits[i] = wait(i);
+        duration += times[i] + waits[i];
+    }
+    for(let i = 0; i < frames.length; i++) {
+        let t = times[i]/duration * looptime;
+        let w = waits[i]/duration * looptime;
+
+        tweens[i] = new TWEEN.Tween(state, grp)
+            .to(frames[i], t * 1000)
+            .delay(w * 1000)
+            .easing(ease)
+            .onUpdate(update);
+    }
+    for(let i = 0; i < tweens.length - 1; i++) tweens[i].chain(tweens[i + 1]);
+    tweens[tweens.length - 1].chain(tweens[0]);
+
+    this.update = (ms) => { grp.update(ms) }
+
+    // this.start = () => {
+    //     // for(let i = 0; i < frames.length; i++) tweens[i].stop();
+    //     update(state);
+    //     tweens[1].start()
+    // }
+
+    update(state);
+    tweens[1].start()}

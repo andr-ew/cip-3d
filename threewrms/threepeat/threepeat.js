@@ -33,7 +33,10 @@ var record = function(name = ("output" + Date.now()), format = ".mp4", sz = 1, f
 
     var len = w.fps * w.ll;
     for (var i = 0; i < len; i++) {
-        update(i/(w.fps * w.ll), (i/w.fps) * 1000);
+        renderer.clear();
+
+        let ms = (i/w.fps) * 1000
+        update(i/(w.fps * w.ll), ms, tms + ms);
         renderer.render( scene, camera );
 
         var r = new XMLHttpRequest();
@@ -44,20 +47,20 @@ var record = function(name = ("output" + Date.now()), format = ".mp4", sz = 1, f
     }
 }
 
-var earlier = 0;
+var earlier = ( performance || Date ).now();
 var ms = 0;
+var tms = 0;
 
 var animate = function() {
     if(!recording) {
         requestAnimationFrame( animate );
 
-        if(ms < w.ll * 1000) {
-            let now = ( performance || Date ).now();
+        let now = ( performance || Date ).now();
+        ms += now - earlier;
+        tms += now - earlier;
+        earlier = now;
 
-            ms += now - earlier;
-            earlier = now;
-
-        } else ms = 0;
+        if(ms > w.ll * 1000) ms = 0;
 
         w.t = ms / w.ll / 1000;
         update(w.t, ms);
@@ -69,10 +72,6 @@ var animate = function() {
 
 w.record = record;
 w.r = w.record;
-
-w.reset = function() {
-    threepeat(w.init, w.update);
-}
 
 function dataURItoBlob(dataURI) {
     var mimetype = dataURI.split(",")[0].split(':')[1].split(';')[0];
