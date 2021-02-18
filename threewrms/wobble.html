@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>wrms</title>
+    <style>
+			body { margin: 0; color: blue; }
+			canvas { display: block; }
+		</style>
+	</head>
+	<body>
+		<script src="./threepeat/three/build/three.min.js"></script>
+		<script type="module" src="./threepeat/threepeat.js"></script>
+		<script type="module">
+			import * as THREE from './threepeat/three/build/three.module.js';
+			import { OrbitControls } from
+				'./threepeat/three/examples/jsm/controls/OrbitControls.js';
+		    import { Wrm, loadmodel, makemodel, makecrv } from './wrms.js';
+		    import { threepeat } from './threepeat/threepeat.js';
+			import { Curves } from
+			'./threepeat/three/examples/jsm/curves/CurveExtras.js';
+
+		    var w = window;
+
+		    w.ll = 18;
+
+		    threepeat((scene, camera, renderer) => {
+		    	var orbit = new OrbitControls( camera, renderer.domElement );
+
+				var g = new THREE.Group();
+				scene.add(g);
+
+				makemodel('tea', (b) => {
+					// w.b = b
+					g.add(b)
+				});
+
+
+		        camera.position.z = 300;
+
+		        return (t) => {
+					g.rotation.y = Math.PI * 2 * t * 3;
+					g.rotation.x = Math.PI * 2 * t;
+		        }
+		    });
+		</script>
+	</body>
+</html>

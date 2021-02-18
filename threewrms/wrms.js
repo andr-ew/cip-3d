@@ -81,17 +81,29 @@ export var loadmodel = function(name, onload) {
 export var formatters = {}
 
 formatters['teapot3'] = (mesh) => {
-    // mesh.position.y = -50 * 0.25;
+    mesh.position.y = -50 * 0.25;
     mesh.scale.set(0.25, 0.25, 0.25);
-    // mesh.rotateX(-Math.PI/2);
+    mesh.rotateX(-Math.PI/2);
 
     return mesh
 }
 
 formatters['boquet'] = (mesh) => {
-    mesh.position.y = -50 * 0.25;
-    mesh.scale.set(0.25, 0.25, 0.25);
-    mesh.rotateX(-Math.PI/2);
+    mesh.position.z = -275;
+    mesh.position.y = 50;
+    mesh.scale.set(0.5, 0.5, 0.5);
+    mesh.rotateX(Math.PI/8);
+
+    return mesh
+}
+
+formatters['tea'] = (mesh) => {
+    mesh.position.z = -270;
+    mesh.position.y = 75;
+    mesh.position.x = 10;
+    mesh.scale.set(0.5, 0.5, 0.5);
+    mesh.rotateX(Math.PI/8 * 1.4);
+    mesh.rotateZ(-Math.PI * 0.037);
 
     return mesh
 }

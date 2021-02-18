@@ -10,30 +10,38 @@
 	</head>
 	<body>
 		<script src="./threepeat/three/build/three.min.js"></script>
-		<script src="./threepeat/threecap/threecap.js"></script>
 		<script type="module" src="./threepeat/threepeat.js"></script>
 		<script type="module">
 			import * as THREE from './threepeat/three/build/three.module.js';
 			import { OrbitControls } from
 				'./threepeat/three/examples/jsm/controls/OrbitControls.js';
-		    import { makemodel, tea } from './models.js';
+		    import { Wrm, loadmodel, makemodel, makecrv } from './wrms.js';
 		    import { threepeat } from './threepeat/threepeat.js';
 			import { Curves } from
 			'./threepeat/three/examples/jsm/curves/CurveExtras.js';
 
 		    var w = window;
 
-		    w.lt = 10;
+		    w.ll = 6;
 
 		    threepeat((scene, camera, renderer) => {
 		    	var orbit = new OrbitControls( camera, renderer.domElement );
 
-				scene.add(tea);
+				var g = new THREE.Group();
+				scene.add(g);
+
+				makemodel('flower', (b) => {
+					// w.b = b
+					g.add(b)
+				});
+
 
 		        camera.position.z = 300;
 
 		        return (t) => {
-		        	tea.rotation.y = (2 * Math.PI) * t;
+					g.rotation.y = Math.PI * 2 * t;
+					// g.rotation.x = Math.PI * 2 * t;
+					// g.rotation.z = -Math.PI * 2 * t;
 		        }
 		    });
 		</script>
