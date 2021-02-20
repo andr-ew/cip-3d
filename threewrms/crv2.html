@@ -15,57 +15,82 @@
 			import * as THREE from './threepeat/three/build/three.module.js';
 			import { OrbitControls } from
 				'./threepeat/three/examples/jsm/controls/OrbitControls.js';
-		    import { Wrm, loadmodel, makemodel, makecrv } from './wrms.js';
+		    import { Wrm, loadmodel, makemodel, makecrv, sky } from './wrms.js';
 		    import { threepeat } from './threepeat/threepeat.js';
 			import { Curves } from
 			'./threepeat/three/examples/jsm/curves/CurveExtras.js';
 
 		    var w = window;
 
-		    w.lt = 10;
+		    w.ll = 25;
 
-		    threepeat((scene, camera, renderer) => {
-		    	var orbit = new OrbitControls( camera, renderer.domElement );
+			var imgload = new THREE.TextureLoader();
 
-				let tf = new Curves.TrefoilKnot(30);
-				let kc = new Curves.KnotCurve(30);
+			imgload.load(
+				// 'img/IMG_0618.jpeg',
+				// 'img/100_3995.JPG',
+				// 'img/Screen Shot 2019-09-04 at 4.25.54 PM.png',
+				// 'img/Screen Shot 2019-06-28 at 3.37.36 PM.png',
+				// 'img/Screen Shot 2019-06-28 at 2.14.59 PM.png',
+				'img/100_4109.JPG',
+				// 'img/IMG_7975.JPG',
+				// 'img/IMG_0373.JPG',
+				// 'img/100_3313.JPG'
+				// 'img/Screen Shot 2019-09-04 at 4.19.34 PM',
+				// 'img/equirect.png',
+				(tex) => {
+				    threepeat((scene, camera, renderer) => {
+				    	// var orbit = new OrbitControls( camera, renderer.domElement );
 
-				var parent = new THREE.Object3D();
-				scene.add( parent );
+						camera.far = 900;
+						camera.updateProjectionMatrix();
 
-				var wrm = new Wrm(
-					'teapot3',
-					// makecrv(function ( t, optionalTarget ) {
-					//
-					// 	var point = optionalTarget || new THREE.Vector3();
-					//
-					// 	t *= 2 * Math.PI;
-					//
-					// 	var R = 20;
-					// 	var s = 50;
-					//
-					// 	var sz = 1.5;
-					//
-					// 	var x = s * Math.cos( 2 * t );
-					// 	var y = Math.cos( t ) * ( R + s * Math.cos( t ) ) ;
-					// 	var z = Math.sin( t ) * ( R + s * Math.cos( t ) );
-					//
-					// 	return point.set( x * sz, y * sz, z * sz );
-					// }),
-					new THREE.TubeBufferGeometry(
-				        tf , 100, 1, 3, true ),
-					60
-				);
+						let tf = new Curves.TrefoilKnot(100);
+						tf.scale = 100;
 
-				//makemodel('teapot3', (tea) => { scene.add(tea) });
+						let kc = new Curves.KnotCurve(30);
+
+						sky(tex);
+
+						var wrm = new Wrm(
+							// 'flower',
+							// 'fel-pro',
+							'lychee',
+							// makecrv(function ( t, optionalTarget ) {
+							//
+							// 	var point = optionalTarget || new THREE.Vector3();
+							//
+							// 	t *= 2 * Math.PI;
+							//
+							// 	var R = 20;
+							// 	var s = 50;
+							//
+							// 	var sz = 1.5;
+							//
+							// 	var x = s * Math.cos( 2 * t );
+							// 	var y = Math.cos( t ) * ( R + s * Math.cos( t ) ) ;
+							// 	var z = Math.sin( t ) * ( R + s * Math.cos( t ) );
+							//
+							// 	return point.set( x * sz, y * sz, z * sz );
+							// }),
+							new THREE.TubeBufferGeometry(
+						        tf , 100, 1, 3, true ),
+							120
+						);
+
+						//makemodel('teapot3', (tea) => { scene.add(tea) });
 
 
-		        camera.position.z = 300;
+				        camera.position.z = 300;
 
-		        return (t) => {
-					wrm.update(t);
-		        }
-		    });
+				        return (t) => {
+							wrm.group.rotation.y = Math.PI * 2 * t;
+							camera.rotation.y = -Math.PI * 2 * t;
+							wrm.group.rotation.x = Math.PI * 2 * t;
+							wrm.update(t);
+				        }
+				    });
+				});
 		</script>
 	</body>
 </html>

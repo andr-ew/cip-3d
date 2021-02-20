@@ -120,6 +120,15 @@ export var makemodel = (name, onload) => {
     });
 };
 
+export var sky = function(tex) {
+    const pmremGenerator = new THREE.PMREMGenerator( window.renderer );
+    var hdrCubeRenderTarget = pmremGenerator.fromEquirectangular( tex );
+    tex.dispose();
+    pmremGenerator.dispose();
+
+    window.scene.background = hdrCubeRenderTarget.texture;
+}
+
 export var Wrm = function(name, crv, nsegs, onload) {
 
     var direction = new THREE.Vector3();
@@ -129,16 +138,20 @@ export var Wrm = function(name, crv, nsegs, onload) {
     var lookAt = new THREE.Vector3();
 
     var segments = []
+    this.group = new THREE.Group();
 
     loadmodel(name, (geo, mat) => {
         for(let i = 0; i < nsegs; i++) {
             var mesh = new THREE.Mesh( geo, mat );
             if(formatters[name]) { formatters[name](mesh); }
 
+            var container = new THREE.Group();
+            container.add(mesh);
+            container.rotation.x = -Math.PI/2;
             segments[i] = new THREE.Group();
-            segments[i].add(mesh)
+            segments[i].add(container);
 
-            scene.add( segments[i] );
+            this.group.add( segments[i] );
         }
 
         if(onload) onload();
@@ -187,6 +200,8 @@ export var Wrm = function(name, crv, nsegs, onload) {
             seg.quaternion.setFromRotationMatrix( seg.matrix );
         }
     }
+
+    scene.add(this.group);
 }
 
 export var Seq = function(args) {

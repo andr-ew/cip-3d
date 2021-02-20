@@ -22,7 +22,7 @@
 
 		    var w = window;
 
-		    w.lt = 10;
+		    w.ll = 17;
 
 		    threepeat((scene, camera, renderer) => {
 		    	var orbit = new OrbitControls( camera, renderer.domElement );
@@ -34,7 +34,7 @@
 				scene.add( parent );
 
 				var wrm = new Wrm(
-					'boquet',
+					'tea',
 					makecrv(function ( t, optionalTarget ) {
 
 						var point = optionalTarget || new THREE.Vector3();
@@ -44,7 +44,7 @@
 						var R = 20;
 						var s = 50;
 
-						var sz = 1.5;
+						var sz = 3;
 
 						var x = s * Math.sin( 1 * t );
 						var y = Math.cos( t ) * ( R + s * Math.cos( t ) ) ;
@@ -63,7 +63,8 @@
 		        camera.position.z = 300;
 
 		        return (t) => {
-					wrm.update(t);
+					wrm.group.rotation.y = Math.PI * 2 * t;
+					wrm.update(t * 2);
 		        }
 		    });
 		</script>
