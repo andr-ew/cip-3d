@@ -58,7 +58,8 @@
 					"numoutlets" : 2,
 					"outlettype" : [ "", "bang" ],
 					"parameter_enable" : 0,
-					"patching_rect" : [ 981.0, 293.0, 50.0, 22.0 ]
+					"patching_rect" : [ 981.0, 293.0, 50.0, 22.0 ],
+					"varname" : "number"
 				}
 
 			}
@@ -106,18 +107,19 @@
 					"numinlets" : 1,
 					"numoutlets" : 4,
 					"outlettype" : [ "", "", "", "" ],
-					"patching_rect" : [ 244.0, 659.0, 56.0, 22.0 ],
+					"patching_rect" : [ 244.0, 659.0, 135.0, 22.0 ],
 					"restore" : 					{
 						"button[1]" : [ 0.0 ],
 						"button[2]" : [ 1.0 ],
 						"file" : [ 83 ],
 						"filenum" : [ 83 ],
+						"number" : [ 0 ],
 						"random" : [ 0.0 ],
 						"seek" : [ 0 ]
 					}
 ,
-					"text" : "autopattr",
-					"varname" : "u450000808"
+					"text" : "autopattr @autoname 1",
+					"varname" : "u025014381"
 				}
 
 			}
