@@ -10,7 +10,7 @@
 		}
 ,
 		"classnamespace" : "box",
-		"rect" : [ 105.0, 79.0, 1155.0, 714.0 ],
+		"rect" : [ 423.0, 97.0, 476.0, 752.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -39,6 +39,43 @@
 		"subpatcher_template" : "",
 		"assistshowspatchername" : 0,
 		"boxes" : [ 			{
+				"box" : 				{
+					"id" : "obj-11",
+					"linecount" : 2,
+					"maxclass" : "message",
+					"numinlets" : 2,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"patching_rect" : [ 347.0, 90.0, 140.0, 35.0 ],
+					"text" : ";\rmax videoengine viddll"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-10",
+					"maxclass" : "newobj",
+					"numinlets" : 1,
+					"numoutlets" : 2,
+					"outlettype" : [ "jit_matrix", "" ],
+					"patching_rect" : [ 247.0, 142.0, 135.0, 22.0 ],
+					"text" : "jit.movie @engine viddll"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-5",
+					"maxclass" : "message",
+					"numinlets" : 2,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"patching_rect" : [ 328.0, 210.0, 50.0, 22.0 ],
+					"text" : "0"
+				}
+
+			}
+, 			{
 				"box" : 				{
 					"id" : "obj-8",
 					"maxclass" : "newobj",
@@ -280,17 +317,17 @@
 										"button[3]" : [ 1.0 ],
 										"button[4]" : [ 1.0 ],
 										"button[5]" : [ 0.0 ],
-										"live.dial" : [ 0.007874015748033 ],
-										"live.dial[1]" : [ 0.0 ],
-										"number" : [ 59 ],
+										"live.dial" : [ 0.023622047244095 ],
+										"live.dial[1]" : [ 1.0 ],
+										"number" : [ 60 ],
 										"number[10]" : [ 0 ],
 										"number[1]" : [ 64 ],
-										"number[2]" : [ 59 ],
+										"number[2]" : [ 60 ],
 										"number[3]" : [ 255 ],
 										"number[4]" : [ 2.0 ],
 										"number[5]" : [ 30 ],
 										"number[6]" : [ 1 ],
-										"number[7]" : [ 4 ],
+										"number[7]" : [ 5 ],
 										"number[8]" : [ 0 ],
 										"number[9]" : [ 0 ],
 										"toggle" : [ 1 ],
@@ -492,7 +529,7 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 1104.000032901763916, 872.000025987625122, 50.0, 22.0 ],
-									"text" : "12"
+									"text" : "1"
 								}
 
 							}
@@ -15268,12 +15305,13 @@
 , 											{
 												"box" : 												{
 													"id" : "obj-11",
+													"linecount" : 2,
 													"maxclass" : "message",
 													"numinlets" : 2,
 													"numoutlets" : 1,
 													"outlettype" : [ "" ],
-													"patching_rect" : [ 508.0, 606.0, 50.0, 22.0 ],
-													"text" : "0."
+													"patching_rect" : [ 508.0, 606.0, 50.0, 35.0 ],
+													"text" : "0.755906"
 												}
 
 											}
@@ -15312,11 +15350,11 @@
 													"restore" : 													{
 														"button[1]" : [ 0.0 ],
 														"button[2]" : [ 1.0 ],
-														"file" : [ 2 ],
-														"filenum" : [ 2 ],
+														"file" : [ 82 ],
+														"filenum" : [ 82 ],
 														"number" : [ 105 ],
 														"random" : [ 0.0 ],
-														"seek" : [ 0 ]
+														"seek" : [ 96 ]
 													}
 ,
 													"text" : "autopattr @autoname 1",
@@ -17723,7 +17761,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "int" ],
-					"patching_rect" : [ 18.66665518283844, 153.666674733161926, 40.0, 22.0 ],
+					"patching_rect" : [ 18.66665518283844, 161.666674733161926, 40.0, 22.0 ],
 					"text" : "midiin"
 				}
 
@@ -17893,6 +17931,15 @@
 , 			{
 				"patchline" : 				{
 					"destination" : [ "obj-4", 0 ],
+					"order" : 1,
+					"source" : [ "obj-2", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-5", 1 ],
+					"order" : 0,
 					"source" : [ "obj-2", 0 ]
 				}
 
@@ -17907,7 +17954,7 @@
 , 			{
 				"patchline" : 				{
 					"destination" : [ "obj-2", 0 ],
-					"source" : [ "obj-22", 0 ]
+					"source" : [ "obj-22", 1 ]
 				}
 
 			}
