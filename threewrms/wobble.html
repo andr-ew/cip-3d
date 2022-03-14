@@ -15,7 +15,7 @@
 			import * as THREE from './threepeat/three/build/three.module.js';
 			import { OrbitControls } from
 				'./threepeat/three/examples/jsm/controls/OrbitControls.js';
-		    import { Wrm, loadmodel, makemodel, makecrv } from './wrms.js';
+		    import { Wrm, loadmodel, makemodel, makecrv, sky } from './wrms.js';
 		    import { threepeat } from './threepeat/threepeat.js';
 			import { Curves } from
 			'./threepeat/three/examples/jsm/curves/CurveExtras.js';
@@ -24,25 +24,46 @@
 
 		    w.ll = 18;
 
-		    threepeat((scene, camera, renderer) => {
-		    	var orbit = new OrbitControls( camera, renderer.domElement );
+			var imgload = new THREE.TextureLoader();
 
-				var g = new THREE.Group();
-				scene.add(g);
+			//img20200310_19431568_4.jpg
+			imgload.load(
+				// 'img/IMG_0618.jpeg',
+				// 'img/100_3995.JPG',
+				// 'img/Screen Shot 2019-09-04 at 4.25.54 PM.png',
+				// 'img/Screen Shot 2019-06-28 at 3.37.36 PM.png',
+				// 'img/Screen Shot 2019-06-28 at 2.14.59 PM.png',
+				// 'img/100_4109.JPG',
+				// 'img/IMG_7975.JPG',
+				// 'img/IMG_0373.JPG',
+				// 'img/100_3313.JPG'
+				// 'img/Screen Shot 2019-09-04 at 4.19.34 PM',
+				// 'img/equirect.png',
+				'img/img20200310_19431568_4.jpg',
+				(tex) => {
+				    threepeat((scene, camera, renderer) => {
+				    	var orbit = new OrbitControls( camera, renderer.domElement );
 
-				makemodel('tea', (b) => {
-					// w.b = b
-					g.add(b)
+						//sky(tex);
+						scene.background = tex;
+
+						var g = new THREE.Group();
+						scene.add(g);
+
+						makemodel('tea', (b) => {
+							// w.b = b
+							g.add(b)
+						});
+
+
+				        camera.position.z = 300;
+
+				        return (t) => {
+							g.rotation.y = Math.PI * 2 * t * 3;
+							g.rotation.x = Math.PI * 2 * t;
+				        }
+				    });
 				});
-
-
-		        camera.position.z = 300;
-
-		        return (t) => {
-					g.rotation.y = Math.PI * 2 * t * 3;
-					g.rotation.x = Math.PI * 2 * t;
-		        }
-		    });
 		</script>
 	</body>
 </html>
